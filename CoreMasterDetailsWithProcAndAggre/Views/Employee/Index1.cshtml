@@ -1,0 +1,53 @@
+﻿@* @model CoreMasterDetailsWithProcAndAggre.Models.VM.AggregateViewModels
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <h1 class="display-4">Aggregate Function</h1>
+
+    <table class="table table-striped table-bordered">
+        <tr>
+            <th>Min Value</th>
+            <th>Max Value</th>
+            <th>Sum Value</th>
+            <th>Avg Value</th>
+        </tr>
+        <tr>
+            <td>@Model.MinValue</td>
+            <td>@Model.MaxValue</td>
+            <td>@Model.SumValue</td>
+            <td>@Model.AvgValue</td>
+        </tr>
+    </table>
+    <hr />
+
+    <h2>Group By Result</h2>
+    <table class="table table-striped table-bordered">
+        <tr>
+            <th>Vendor ID</th>
+            <th>Min Value</th>
+            <th>Max Value</th>
+            <th>Sum Value</th>
+            <th>Avg Value</th>
+            <th>Count</th>
+        </tr>
+        @foreach (var item in Model.GroupByResult)
+        {
+            <tr>
+                <th>@item.EmployeeId</th>
+                <th>@item.MinValue</th>
+                <th>@item.MaxValue</th>
+                <th>@item.SumValue</th>
+                <th>@item.AvgValue</th>
+                <th>@item.Count</th>
+            </tr>
+        }
+
+
+    </table>
+</div>
+
+ *@
