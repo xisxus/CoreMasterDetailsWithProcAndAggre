@@ -73,24 +73,35 @@ namespace CoreMasterDetailsWithProcAndAggre.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var data = db.Employees;
+            // Fetch the data from the database
+            var data = db.Employees.AsQueryable();
 
-            // Aggregate operations
-            var min = data.Min(e => e.Salary);
-            var max = data.Max(e => e.Salary);
-            var sum = data.Sum(e => e.Salary);
-            var avg = data.Average(e => e.Salary);
-            var count = data.Count();
+            // Initialize aggregate values
+            decimal min = 0, max = 0, sum = 0, avg = 0;
+            int count = 0;
 
-            var groupbyresult = data.GroupBy(i => i.EmployeeId).Select(c => new GroupByViewModel
+            if (data.Any())
             {
-                EmployeeId = c.Key,
-                MinValue = c.Min(e => e.Salary),
-                MaxValue = c.Max(e => e.Salary),
-                SumValue = c.Sum(e => e.Salary),
-                AvgValue = Convert.ToDecimal(c.Average(e => e.Salary)),
-                Count = c.Count()
-            }).ToList();
+                // Perform aggregate operations if data is not empty
+                min = data.Min(e => e.Salary);
+                max = data.Max(e => e.Salary);
+                sum = data.Sum(e => e.Salary);
+                avg = (decimal)data.Average(e => e.Salary);
+                count = data.Count();
+            }
+
+            // Group by EmployeeId and perform aggregate operations
+            var groupbyresult = data
+                .GroupBy(i => i.EmployeeId)
+                .Select(c => new GroupByViewModel
+                {
+                    EmployeeId = c.Key,
+                    MinValue = c.Min(e => e.Salary),
+                    MaxValue = c.Max(e => e.Salary),
+                    SumValue = c.Sum(e => e.Salary),
+                    AvgValue = Convert.ToDecimal(c.Average(e => e.Salary)),
+                    Count = c.Count()
+                }).ToList();
 
             // Fetch employees with experiences
             var employees = await data
@@ -123,6 +134,7 @@ namespace CoreMasterDetailsWithProcAndAggre.Controllers
 
             return View(model);
         }
+
 
 
 
